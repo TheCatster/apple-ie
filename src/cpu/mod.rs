@@ -55,7 +55,19 @@ impl CPU {
     }
 
     pub fn begin(&mut self, instruction_set: &[InstructionInfo]) {
-
+        loop {
+            // Fetch
+            let opcode = self.memory.read(self.registers.program_counter);
+            
+            // Decode
+            let instruction = &instruction_set[opcode as usize];
+            
+            // Execute
+            self.execute(instruction.opcode);
+            
+            // Increment program counter
+            self.registers.program_counter += instruction.size as u16;
+        }
     }
 
     fn execute(&mut self, opcode: &Opcode) {
