@@ -1,5 +1,5 @@
 use crate::memory::Memory;
-use crate::assembler::{adc, and, asl, Opcode};
+use crate::assembler::{adc, and, asl, InstructionInfo, Opcode};
 use bitflags::bitflags;
 
 bitflags! {
