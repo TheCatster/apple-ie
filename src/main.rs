@@ -4,14 +4,14 @@ use assembler::{
     Opcode::{ADC, STA},
     OPCODE_SIZE_2, OPCODE_SIZE_3,
 };
-use cpu::CPUState;
+use cpu::CPU;
 
 mod assembler;
 mod cpu;
 mod memory;
 
 fn main() {
-    let mut cpu: CPUState = CPUState::new();
+    let mut cpu: CPU = CPU::new();
     let instruction_set = vec![
         InstructionInfo {
             opcode: ADC,
