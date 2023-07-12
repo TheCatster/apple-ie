@@ -58,10 +58,6 @@ impl CPU {
             // fetch, decode, execute
         }
     }
-        loop {
-            // fetch, decode, execute
-        } 
-    }
 
     fn execute(&mut self, opcode: &Opcode) {
         match opcode {

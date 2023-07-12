@@ -24,6 +24,10 @@ pub struct InstructionInfo {
     pub cycle_count: usize,
 }
 
+pub fn decode(opcode: u8) -> InstructionInfo {
+    // decode opcode
+}
+
 // ADC - Add with Carry
 pub fn adc() {
   // implementation
@@ -303,9 +307,3 @@ pub fn txs() {
 pub fn tya() {
   // implementation
 }
-    pub fn decode(opcode: u8) -> InstructionInfo {
-        // decode opcode
-    }
-    pub fn decode(opcode: u8) -> InstructionInfo {
-        // decode opcode
-    }
