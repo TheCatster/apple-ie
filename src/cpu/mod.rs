@@ -24,8 +24,16 @@ struct Registers {
     stack_pointer: u8,
 }
 
-struct StatusFlags {
-    // Same as before
+impl Registers {
+    pub fn new() -> Self {
+        Registers {
+            accumulator: 0,
+            x: 0,
+            y: 0,
+            program_counter: 0,
+            stack_pointer: 0,
+        }
+    }
 }
 
 pub struct CPU {
@@ -38,13 +46,7 @@ pub struct CPU {
 impl CPU {
     pub fn new() -> Self {
         CPU {
-            registers: Registers {
-                accumulator: 0,
-                x: 0,
-                y: 0, 
-                program_counter: 0,
-                stack_pointer: 0,
-            },
+            registers: Registers::new(),
             status: StatusFlags::default(),
             memory: Memory::new(),
             clock: 0,
