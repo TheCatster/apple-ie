@@ -63,7 +63,7 @@ impl CPU {
             let instruction = &instruction_set[opcode as usize];
             
             // Execute
-            self.execute(instruction.opcode as Opcode);
+            self.execute(&instruction.opcode);
             
             // Increment program counter
             self.registers.program_counter += instruction.size as u16;
@@ -75,7 +75,7 @@ impl CPU {
         }
     }
 
-    fn execute(&mut self, opcode: Opcode) {
+    fn execute(&mut self, opcode: &Opcode) {
         match opcode {
             Opcode::ADC => adc(),
             Opcode::AND => and(),
