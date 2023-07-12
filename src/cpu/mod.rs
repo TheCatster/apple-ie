@@ -54,23 +54,23 @@ impl CPU {
         }
     }
 
-    pub fn begin(&mut self, instruction_set: &[u8]) {
+    pub fn begin(&mut self, instruction_set: &[InstructionInfo]) {
         loop {
-            for instruction in instruction_set {
-                // Fetch
-                let opcode = memory.read(self.program_counter);
-                self.program_counter += instruction_set[opcode as usize].size;
-
-                // Decode
-                let instruction = &instruction_set[opcode as usize];
-
-                // Execute
-                self.execute(instruction);
-
-                // Repeat for cycle count
-                for _ in 0..instruction.cycle_count {
-                    self.clock += 1;
-                }
+            // Fetch
+            let opcode = self.memory.read(self.registers.program_counter);
+            
+            // Decode
+            let instruction = &instruction_set[opcode as usize];
+            
+            // Execute
+            self.execute(instruction.opcode);
+            
+            // Increment program counter
+            self.registers.program_counter += instruction.size as u16;
+            
+            // Repeat for cycle count
+            for _ in 0..instruction.cycle_count {
+                self.clock += 1; 
             }
         }
     }
