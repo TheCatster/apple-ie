@@ -11,7 +11,7 @@ mod cpu;
 mod memory;
 
 fn main() {
-    let mut cpu = CPUState::new();
+    let mut cpu: CPUState = CPUState::new();
     let instruction_set = vec![
         InstructionInfo {
             opcode: ADC,
@@ -27,5 +27,5 @@ fn main() {
         },
     ];
 
-    cpu.begin(&instruction_set);
+    cpu.begin();
 }

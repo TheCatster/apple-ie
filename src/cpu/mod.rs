@@ -3,7 +3,7 @@ use crate::assembler::{adc, and, asl, InstructionInfo, Opcode};
 use bitflags::bitflags;
 
 bitflags! {
-    pub struct StatusFlags: u8 {
+    pub struct StatusFlags {
         const CARRY      = 0b0000_0001;
         const ZERO       = 0b0000_0010;
         const INTERRUPT  = 0b0000_0100;
@@ -54,7 +54,7 @@ impl CPU {
         }
     }
 
-    pub fn begin(&mut self, instruction_set: &[InstructionInfo]) {
+    pub fn begin(&mut self) {
         loop {
             // Fetch
             let opcode = self.memory.read(self.registers.program_counter);
@@ -63,7 +63,7 @@ impl CPU {
             let instruction = &instruction_set[opcode as usize];
             
             // Execute
-            self.execute(instruction.opcode);
+            self.execute(&instruction.opcode);
             
             // Increment program counter
             self.registers.program_counter += instruction.size as u16;
