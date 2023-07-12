@@ -1,0 +1,11 @@
+impl Registers {
+    pub fn new() -> Self {
+        Registers {
+            accumulator: 0,
+            x: 0,
+            y: 0,
+            program_counter: 0,
+            stack_pointer: 0,
+        }
+    }
+}
