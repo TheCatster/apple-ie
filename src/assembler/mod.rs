@@ -25,7 +25,25 @@ pub struct InstructionInfo {
 }
 
 pub fn decode(opcode: u8) -> InstructionInfo {
-    // decode opcode
+    match opcode {
+        0x69 => InstructionInfo {
+            opcode: Opcode::ADC,
+            size: OPCODE_SIZE_2,
+            addressing_mode: AddressingMode::Immediate,
+            cycle_count: 2
+        },
+
+        0x65 => InstructionInfo {
+            opcode: Opcode::ADC,
+            size: OPCODE_SIZE_2,
+            addressing_mode: AddressingMode::ZeroPage,
+            cycle_count: 3,
+        },
+
+        // ... add other opcodes
+
+        _ => panic!("Invalid opcode: {}", opcode),
+    }
 }
 
 // ADC - Add with Carry
@@ -306,26 +324,4 @@ pub fn txs() {
 // TYA - Transfer Y to Accumulator
 pub fn tya() {
   // implementation
-}pub fn decode(opcode: u8) -> InstructionInfo {
-  let instruction = match opcode {
-    0x69 => InstructionInfo { 
-        opcode: ADC,
-        size: OPCODE_SIZE_2,
-        addressing_mode: Immediate,
-        cycle_count: 2
-    },
-    
-    0x65 => InstructionInfo {
-        opcode: ADC,
-        size: OPCODE_SIZE_2,
-        addressing_mode: ZeroPage,
-        cycle_count: 3,  
-    },
-    
-    // ... add other opcodes
-    
-    _ => panic!("Invalid opcode: {}", opcode),
-  };
-
-  instruction
 }
