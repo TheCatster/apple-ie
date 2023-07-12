@@ -303,3 +303,6 @@ pub fn txs() {
 pub fn tya() {
   // implementation
 }
+    pub fn decode(opcode: u8) -> InstructionInfo {
+        // decode opcode
+    }

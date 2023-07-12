@@ -55,7 +55,9 @@ impl CPU {
     }
 
     pub fn begin(&mut self) {
-
+        loop {
+            // fetch, decode, execute
+        } 
     }
 
     fn execute(&mut self, opcode: &Opcode) {

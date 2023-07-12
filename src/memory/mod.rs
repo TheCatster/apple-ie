@@ -17,3 +17,6 @@ impl Memory {
 }
 
 
+    pub fn read_byte(&self, address: u16) -> u8 {
+        // read byte from memory
+    }
