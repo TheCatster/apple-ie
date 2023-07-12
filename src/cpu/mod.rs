@@ -89,3 +89,35 @@ impl CPU {
         }
     }
 }
+
+pub enum Opcode {
+    ADC,
+    AND,
+    ASL,
+    //...
+}
+
+impl CPU {
+
+    fn execute(&mut self, opcode: Opcode) {
+        match opcode {
+            Opcode::ADC => self.adc(),
+            Opcode::AND => self.and(),
+            Opcode::ASL => self.asl(),
+            // ...
+        }
+    }
+
+    fn adc(&mut self) {
+        // implement ADC
+    }
+
+    fn and(&mut self) {
+        // implement AND
+    }
+
+    fn asl(&mut self) {
+        // implement ASL
+    }
+
+}
