@@ -53,8 +53,11 @@ impl CPU {
             clock: 0,
         }
     }
-
     pub fn begin(&mut self) {
+        loop {
+            // fetch, decode, execute
+        }
+    }
         loop {
             // fetch, decode, execute
         } 
