@@ -1,4 +1,5 @@
 use crate::memory::Memory;
+use crate::assembler::{adc, and, asl, Opcode};
 use bitflags::bitflags;
 
 bitflags! {
@@ -55,25 +56,31 @@ impl CPU {
 
     pub fn begin(&mut self, instruction_set: &[u8]) {
         loop {
-            // Fetch
-            let opcode = memory.read(self.program_counter);
-            self.program_counter += instruction_set[opcode as usize].size;
+            for instruction in instruction_set {
+                // Fetch
+                let opcode = memory.read(self.program_counter);
+                self.program_counter += instruction_set[opcode as usize].size;
 
-            // Decode
-            let instruction = &instruction_set[opcode as usize];
+                // Decode
+                let instruction = &instruction_set[opcode as usize];
 
-            // Execute
-            match instruction.opcode {
-                Opcode::ADC => self.adc(&memory, instruction.addressing_mode),
-                Opcode::STA => self.sta(&memory, instruction.addressing_mode),
-                Opcode::JMP => self.jmp(&memory, instruction.addressing_mode),
-                // etc...
+                // Execute
+                self.execute(instruction);
+
+                // Repeat for cycle count
+                for _ in 0..instruction.cycle_count {
+                    self.clock += 1;
+                }
             }
+        }
+    }
 
-            // Repeat for cycle count
-            for _ in 0..instruction.cycle_count {
-                self.clock += 1;
-            }
+    fn execute(&mut self, opcode: Opcode) {
+        match opcode {
+            Opcode::ADC => adc(),
+            Opcode::AND => and(),
+            Opcode::ASL => asl(),
+            // ...
         }
     }
 
@@ -88,36 +95,4 @@ impl CPU {
             self.status &= !status;
         }
     }
-}
-
-pub enum Opcode {
-    ADC,
-    AND,
-    ASL,
-    //...
-}
-
-impl CPU {
-
-    fn execute(&mut self, opcode: Opcode) {
-        match opcode {
-            Opcode::ADC => self.adc(),
-            Opcode::AND => self.and(),
-            Opcode::ASL => self.asl(),
-            // ...
-        }
-    }
-
-    fn adc(&mut self) {
-        // implement ADC
-    }
-
-    fn and(&mut self) {
-        // implement AND
-    }
-
-    fn asl(&mut self) {
-        // implement ASL
-    }
-
 }

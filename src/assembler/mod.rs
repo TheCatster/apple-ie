@@ -11,6 +11,10 @@ pub enum AddressingMode {
 }
 
 pub enum Opcode {
+    ADC,
+    AND,
+    ASL,
+    //...
 }
 
 pub struct InstructionInfo {
