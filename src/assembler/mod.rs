@@ -11,9 +11,6 @@ pub enum AddressingMode {
 }
 
 pub enum Opcode {
-    ADC, // Add with Carry
-    STA, // Store Accumulator
-    JMP, // Jump
 }
 
 pub struct InstructionInfo {
