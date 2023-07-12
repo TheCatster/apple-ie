@@ -10,7 +10,10 @@ impl Memory {
             rom: [0; 0x2000],
         }
     }
-}
+
     pub fn read(&self, address: u16) -> u8 {
         self.ram[address as usize]
     }
+}
+
+
