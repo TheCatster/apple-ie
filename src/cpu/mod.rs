@@ -63,7 +63,7 @@ impl CPU {
             let instruction = &instruction_set[opcode as usize];
             
             // Execute
-            self.execute(instruction.opcode);
+            self.execute(instruction.opcode as Opcode);
             
             // Increment program counter
             self.registers.program_counter += instruction.size as u16;
