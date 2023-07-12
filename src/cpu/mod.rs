@@ -15,26 +15,37 @@ bitflags! {
     }
 }
 
-pub struct CPUState {
-    pub accumulator: u8,
-    pub x: u8,
-    pub y: u8,
-    pub program_counter: u16,
-    pub stack_pointer: u8,
-    pub status: StatusFlags,
-    pub memory: Memory,
-    pub clock: u8,
+
+struct Registers {
+    accumulator: u8,
+    x: u8,
+    y: u8,
+    program_counter: u16,
+    stack_pointer: u8,
 }
 
-impl CPUState {
-    pub fn new() -> CPUState {
-        CPUState {
-            accumulator: 0,
-            x: 0,
-            y: 0,
-            program_counter: 0,
-            stack_pointer: 0,
-            status: StatusFlags::DEFAULT,
+struct StatusFlags {
+    // Same as before
+}
+
+pub struct CPU {
+    registers: Registers,
+    status: StatusFlags,
+    memory: Memory,
+    clock: u8, 
+}
+
+impl CPU {
+    pub fn new() -> Self {
+        CPU {
+            registers: Registers {
+                accumulator: 0,
+                x: 0,
+                y: 0, 
+                program_counter: 0,
+                stack_pointer: 0,
+            },
+            status: StatusFlags::default(),
             memory: Memory::new(),
             clock: 0,
         }
