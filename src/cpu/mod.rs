@@ -1,9 +1,9 @@
-use crate::memory::Memory;
 use crate::assembler::{adc, and, asl, InstructionInfo, Opcode};
+use crate::memory::Memory;
 use bitflags::bitflags;
 
 bitflags! {
-    pub struct StatusFlags {
+    pub struct StatusFlags: u8 {
         const CARRY      = 0b0000_0001;
         const ZERO       = 0b0000_0010;
         const INTERRUPT  = 0b0000_0100;
@@ -16,12 +16,12 @@ bitflags! {
     }
 }
 
-
 struct Registers {
     accumulator: u8,
     x: u8,
     y: u8,
     program_counter: u16,
+    status: StatusFlags,
     stack_pointer: u8,
 }
 
@@ -32,6 +32,7 @@ impl Registers {
             x: 0,
             y: 0,
             program_counter: 0,
+            status: StatusFlags::DEFAULT,
             stack_pointer: 0,
         }
     }
@@ -39,16 +40,14 @@ impl Registers {
 
 pub struct CPU {
     registers: Registers,
-    status: StatusFlags,
     memory: Memory,
-    clock: u8, 
+    clock: u8,
 }
 
 impl CPU {
     pub fn new() -> Self {
         CPU {
             registers: Registers::new(),
-            status: StatusFlags::default(),
             memory: Memory::new(),
             clock: 0,
         }
@@ -56,6 +55,9 @@ impl CPU {
     pub fn begin(&mut self) {
         loop {
             // fetch, decode, execute
+            println!("Fetch-ing!");
+            println!("Decode-ing!");
+            println!("Execute-ing!");
         }
     }
 
@@ -64,19 +66,20 @@ impl CPU {
             Opcode::ADC => adc(),
             Opcode::AND => and(),
             Opcode::ASL => asl(),
+            _ => panic!("Invalid opcode"),
             // ...
         }
     }
 
     pub fn get_status(&self, status: StatusFlags) -> bool {
-        self.status.bits() & status.bits() != 0
+        self.registers.status.bits() & status.bits() != 0
     }
 
     pub fn set_status(&mut self, status: StatusFlags, value: bool) {
         if value {
-            self.status |= status;
+            self.registers.status |= status;
         } else {
-            self.status &= !status;
+            self.registers.status &= !status;
         }
     }
 }
