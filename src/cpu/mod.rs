@@ -52,13 +52,19 @@ impl CPU {
             memory: Memory::new(),
             clock: 0,
         }
-    }
-    pub fn begin(&mut self) {
+    }    pub fn begin(&mut self) {
         loop {
-            // fetch, decode, execute
-            println!("Fetch-ing!");
-            println!("Decode-ing!");
-            println!("Execute-ing!");
+            // Fetch
+            let opcode = self.memory.read(self.registers.program_counter);
+
+            // Decode
+            let instruction = decode(opcode);
+
+            // Execute
+            self.execute(&instruction.opcode);
+
+            // Increment program counter
+            self.registers.program_counter += instruction.size as u16;
         }
     }
 
