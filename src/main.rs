@@ -6,26 +6,31 @@ use assembler::{
 };
 use cpu::CPU;
 
+use clap::Parser;
+
 mod assembler;
 mod cpu;
 mod memory;
 
-fn main() {
-    let mut cpu: CPU = CPU::new();
-    let instruction_set = vec![
-        InstructionInfo {
-            opcode: ADC,
-            size: OPCODE_SIZE_2,
-            addressing_mode: Absolute,
-            cycle_count: 4,
-        },
-        InstructionInfo {
-            opcode: STA,
-            size: OPCODE_SIZE_3,
-            addressing_mode: ZeroPage,
-            cycle_count: 3,
-        },
-    ];
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    /// Turn debugging information on
+    #[arg(short, long, action = clap::ArgAction::Count)]
+    debug: u8,
 
-    cpu.begin();
+    /// Specify an assembly file to run
+    #[arg(short, long)]
+    file: Option<String>,
+}
+
+fn main() {
+    let cli = Cli::parse();
+    let mut cpu: CPU = CPU::new();
+
+    if cli.file.is_none() {
+        cpu.begin();
+    } else {
+        println!("Running specific assembly file.");
+    }
 }
