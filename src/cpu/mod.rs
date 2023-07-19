@@ -1,15 +1,13 @@
 use crate::memory::Memory;
-use instruction_info::{AddressingMode, InstructionInfo, Opcode};
+use operations::{decode, InstructionInfo};
 
 use bitflags::bitflags;
 use log::info;
+use std::{thread, time};
 
-mod instruction_info;
+mod operations;
 
 pub const CPU_CLOCK_RATE: u32 = 1_000_000; // 1 MHz
-pub const OPCODE_SIZE_1: usize = 1;
-pub const OPCODE_SIZE_2: usize = 2;
-pub const OPCODE_SIZE_3: usize = 3;
 pub const DEFAULT_FLAGS: u8 = 0b0011_0000;
 
 bitflags! {
@@ -92,7 +90,7 @@ impl CPU {
             info!("Instruction retrieved: {:#04x}", &instruction);
 
             // Decode
-            let instruction_info = self.decode(instruction);
+            let instruction_info = decode(instruction);
 
             info!("Instruction decoded!");
 
@@ -102,9 +100,12 @@ impl CPU {
             info!("Instruction executed!");
 
             // Increment program counter
-            self.registers.program_counter += instruction as u16;
+            self.registers.program_counter += instruction_info.size;
             info!("Program counter incremented!");
         }
+
+        // Slow down for now
+        thread::sleep(time::Duration::from_millis(1000));
     }
 
     pub fn get_status(&self, status: StatusFlags) -> bool {
@@ -116,37 +117,6 @@ impl CPU {
             self.registers.status |= status;
         } else {
             self.registers.status &= !status;
-        }
-    }
-
-    pub fn decode(&mut self, opcode: u8) -> InstructionInfo {
-        match opcode {
-            0x00 => InstructionInfo {
-                opcode: Opcode::BRK,
-                size: 0,
-                addressing_mode: AddressingMode::Implied,
-                cycle_count: 1,
-            },
-            0x69 => InstructionInfo {
-                opcode: Opcode::ADC,
-                size: OPCODE_SIZE_2,
-                addressing_mode: AddressingMode::Immediate,
-                cycle_count: 2,
-            },
-            0x65 => InstructionInfo {
-                opcode: Opcode::ADC,
-                size: OPCODE_SIZE_2,
-                addressing_mode: AddressingMode::ZeroPage,
-                cycle_count: 3,
-            },
-            0xEA => InstructionInfo {
-                opcode: Opcode::NOP,
-                size: 0,
-                addressing_mode: AddressingMode::Immediate,
-                cycle_count: 1,
-            },
-            // ... add other opcodes
-            _ => panic!("Invalid opcode: {}", opcode),
         }
     }
 }
