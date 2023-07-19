@@ -16,3 +16,7 @@ readme="README.md"
 [dependencies]
 clap = { version = "4.3", features = ["derive"] }
 bitflags = { version = "2.3" }
+log = { version = "0.4" }
+fern = { version = "0.6" }
+chrono = { version = "0.4" }
+anyhow = { version = "1.0" }

@@ -1,7 +1,16 @@
-use crate::assembler::{adc, and, asl, InstructionInfo, Opcode};
 use crate::memory::Memory;
+use instruction_info::{AddressingMode, InstructionInfo, Opcode};
 
 use bitflags::bitflags;
+use log::info;
+
+mod instruction_info;
+
+pub const CPU_CLOCK_RATE: u32 = 1_000_000; // 1 MHz
+pub const OPCODE_SIZE_1: usize = 1;
+pub const OPCODE_SIZE_2: usize = 2;
+pub const OPCODE_SIZE_3: usize = 3;
+pub const DEFAULT_FLAGS: u8 = 0b0011_0000;
 
 bitflags! {
     pub struct StatusFlags: u8 {
@@ -17,13 +26,13 @@ bitflags! {
     }
 }
 
-struct Registers {
-    accumulator: u8,
-    x: u8,
-    y: u8,
-    program_counter: u16,
-    status: StatusFlags,
-    stack_pointer: u8,
+pub struct Registers {
+    pub accumulator: u8,
+    pub x: u8,
+    pub y: u8,
+    pub program_counter: u16,
+    pub status: StatusFlags,
+    pub stack_pointer: u8,
 }
 
 impl Registers {
@@ -55,8 +64,9 @@ impl CPU {
     }
 
     pub fn run(&mut self) {
+        info!("Beginning main F-D-E loop.");
         loop {
-            self.execute()
+            self.fde()
         }
     }
 
@@ -65,18 +75,36 @@ impl CPU {
         self.registers.program_counter = address;
     }
 
-    pub fn execute(&mut self) {
+    pub fn execute(&mut self, instruction_info: &InstructionInfo) {}
+
+    pub fn fde(&mut self) {
         // Fetch
-        let opcode = self.memory.read(self.registers.program_counter);
+        info!(
+            "Current address is: {:#04x}",
+            self.registers.program_counter
+        );
+        let instruction = self
+            .memory
+            .read(self.registers.program_counter)
+            .unwrap_or(0xEA);
 
-        // Decode
-        let instruction = decode(opcode);
+        if instruction != 0xEA {
+            info!("Instruction retrieved: {:#04x}", &instruction);
 
-        // Execute
-        //self.execute(&instruction.opcode);
+            // Decode
+            let instruction_info = self.decode(instruction);
 
-        // Increment program counter
-        self.registers.program_counter += instruction.size as u16;
+            info!("Instruction decoded!");
+
+            // Execute
+            self.execute(&instruction_info);
+
+            info!("Instruction executed!");
+
+            // Increment program counter
+            self.registers.program_counter += instruction as u16;
+            info!("Program counter incremented!");
+        }
     }
 
     pub fn get_status(&self, status: StatusFlags) -> bool {
@@ -88,6 +116,37 @@ impl CPU {
             self.registers.status |= status;
         } else {
             self.registers.status &= !status;
+        }
+    }
+
+    pub fn decode(&mut self, opcode: u8) -> InstructionInfo {
+        match opcode {
+            0x00 => InstructionInfo {
+                opcode: Opcode::BRK,
+                size: 0,
+                addressing_mode: AddressingMode::Implied,
+                cycle_count: 1,
+            },
+            0x69 => InstructionInfo {
+                opcode: Opcode::ADC,
+                size: OPCODE_SIZE_2,
+                addressing_mode: AddressingMode::Immediate,
+                cycle_count: 2,
+            },
+            0x65 => InstructionInfo {
+                opcode: Opcode::ADC,
+                size: OPCODE_SIZE_2,
+                addressing_mode: AddressingMode::ZeroPage,
+                cycle_count: 3,
+            },
+            0xEA => InstructionInfo {
+                opcode: Opcode::NOP,
+                size: 0,
+                addressing_mode: AddressingMode::Immediate,
+                cycle_count: 1,
+            },
+            // ... add other opcodes
+            _ => panic!("Invalid opcode: {}", opcode),
         }
     }
 }

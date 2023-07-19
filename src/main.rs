@@ -1,12 +1,12 @@
-use assembler::{
-    AddressingMode::{Absolute, ZeroPage},
-    InstructionInfo,
-    Opcode::{ADC, STA},
-    OPCODE_SIZE_2, OPCODE_SIZE_3,
-};
+use assembler::assemble;
 use cpu::CPU;
 
+use anyhow::Result;
+use chrono::Local;
 use clap::Parser;
+use fern::{log_file, Dispatch};
+use log::{info, LevelFilter};
+use std::{fs, io};
 
 mod assembler;
 mod cpu;
@@ -24,19 +24,47 @@ struct Cli {
     file: Option<String>,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let cli = Cli::parse();
     let mut cpu: CPU = CPU::new();
 
-    if cli.file.is_some() {
-        let program = "LDA #$c0
-                       TAX
-                       INX
-                       ADC #$c4";
+    Dispatch::new()
+        .format(|out, message, record| {
+            out.finish(format_args!(
+                "{}[{}][{}] {}",
+                Local::now().format("[%Y-%m-%d][%H:%M:%S]"),
+                record.target(),
+                record.level(),
+                message
+            ))
+        })
+        .level(LevelFilter::Info)
+        .chain(io::stdout())
+        .chain(log_file("apple-ie.log").expect("No permission to write to the current directory."))
+        .apply()
+        .expect("Failed to dispatch Fern logger!");
 
-        let bytes = assembler::assemble(&program);
-        cpu.load(&bytes, 0x800);
-    }
+    info!("Logging initialised.");
+
+    let program = match &cli.file {
+        Some(file) => fs::read_to_string(file)?,
+        None => String::from(
+            "LDA #$c0
+             TAX
+             INX
+             ADC #$c4",
+        ),
+    };
+
+    let bytes = assemble(&program);
+
+    info!("Program assembled.");
+
+    cpu.load(0x800, &bytes);
+
+    info!("Program loaded into memory.");
 
     cpu.run();
+
+    Ok(())
 }

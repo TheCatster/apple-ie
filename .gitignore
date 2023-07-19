@@ -3,6 +3,9 @@
 debug/
 target/
 
+# Logs
+*.log
+
 # Aider Chat
 *.aider*
 
