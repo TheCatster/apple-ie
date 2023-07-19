@@ -52,30 +52,31 @@ impl CPU {
             memory: Memory::new(),
             clock: 0,
         }
-    }    pub fn begin(&mut self) {
+    }
+
+    pub fn run(&mut self) {
         loop {
-            // Fetch
-            let opcode = self.memory.read(self.registers.program_counter);
-
-            // Decode
-            let instruction = decode(opcode);
-
-            // Execute
-            self.execute(&instruction.opcode);
-
-            // Increment program counter
-            self.registers.program_counter += instruction.size as u16;
+            self.execute()
         }
     }
 
-    fn execute(&mut self, opcode: &Opcode) {
-        match opcode {
-            Opcode::ADC => adc(),
-            Opcode::AND => and(),
-            Opcode::ASL => asl(),
-            _ => panic!("Invalid opcode"),
-            // ...
-        }
+    pub fn load(&mut self, address: u16, buffer: &[u8]) {
+        self.memory.load(address, buffer);
+        self.registers.program_counter = address;
+    }
+
+    pub fn execute(&mut self) {
+        // Fetch
+        let opcode = self.memory.read(self.registers.program_counter);
+
+        // Decode
+        let instruction = decode(opcode);
+
+        // Execute
+        //self.execute(&instruction.opcode);
+
+        // Increment program counter
+        self.registers.program_counter += instruction.size as u16;
     }
 
     pub fn get_status(&self, status: StatusFlags) -> bool {

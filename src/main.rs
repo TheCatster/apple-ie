@@ -28,9 +28,15 @@ fn main() {
     let cli = Cli::parse();
     let mut cpu: CPU = CPU::new();
 
-    if cli.file.is_none() {
-        cpu.begin();
-    } else {
-        println!("Running specific assembly file.");
+    if cli.file.is_some() {
+        let program = "LDA #$c0
+                       TAX
+                       INX
+                       ADC #$c4";
+
+        let bytes = assembler::assemble(&program);
+        cpu.load(&bytes, 0x800);
     }
+
+    cpu.run();
 }

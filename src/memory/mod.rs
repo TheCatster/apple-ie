@@ -14,4 +14,6 @@ impl Memory {
     pub fn read(&self, address: u16) -> u8 {
         self.ram[address as usize]
     }
+
+    pub fn load(&mut self, address: u16, buffer: &[u8]) {}
 }
