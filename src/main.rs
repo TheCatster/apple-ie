@@ -52,7 +52,8 @@ fn main() -> Result<()> {
             "LDA #$c0
              TAX
              INX
-             ADC #$c4",
+             ADC #$c4
+             BRK",
         ),
     };
 

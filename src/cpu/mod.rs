@@ -73,7 +73,7 @@ impl CPU {
         self.registers.program_counter = address;
     }
 
-    pub fn execute(&mut self, instruction_info: &InstructionInfo) {}
+    pub fn execute(&mut self, _instruction_info: &InstructionInfo) {}
 
     pub fn fde(&mut self) {
         // Fetch
@@ -86,23 +86,21 @@ impl CPU {
             .read(self.registers.program_counter)
             .unwrap_or(0xEA);
 
-        if instruction != 0xEA {
-            info!("Instruction retrieved: {:#04x}", &instruction);
+        info!("Instruction retrieved: {:#04x}", &instruction);
 
-            // Decode
-            let instruction_info = decode(instruction);
+        // Decode
+        let instruction_info = decode(instruction);
 
-            info!("Instruction decoded!");
+        info!("Instruction decoded!");
 
-            // Execute
-            self.execute(&instruction_info);
+        // Execute
+        self.execute(&instruction_info);
 
-            info!("Instruction executed!");
+        info!("Instruction executed!");
 
-            // Increment program counter
-            self.registers.program_counter += instruction_info.size;
-            info!("Program counter incremented!");
-        }
+        // Increment program counter
+        self.registers.program_counter += instruction_info.size;
+        info!("Program counter incremented!");
 
         // Slow down for now
         thread::sleep(time::Duration::from_millis(1000));

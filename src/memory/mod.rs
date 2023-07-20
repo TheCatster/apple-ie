@@ -13,5 +13,5 @@ impl Memory {
         self.ram.get(address as usize).copied()
     }
 
-    pub fn load(&mut self, address: u16, buffer: &[u8]) {}
+    pub fn load(&mut self, _address: u16, _buffer: &[u8]) {}
 }
