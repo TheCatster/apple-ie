@@ -1,6 +1,7 @@
 use crate::memory::Memory;
 use operations::{decode, InstructionInfo};
 
+use anyhow::Result;
 use bitflags::bitflags;
 use log::info;
 use std::{thread, time};
@@ -59,10 +60,10 @@ impl Cpu {
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> Result<()> {
         info!("Beginning main F-D-E loop.");
         loop {
-            self.fde()
+            self.fde()?
         }
     }
 
@@ -71,9 +72,12 @@ impl Cpu {
         self.registers.program_counter = address;
     }
 
-    pub fn execute(&mut self, _instruction_info: &InstructionInfo) {}
+    pub fn execute(&mut self, instruction_info: &InstructionInfo) -> Result<()> {
+        instruction_info.execute()?;
+        Ok(())
+    }
 
-    pub fn fde(&mut self) {
+    pub fn fde(&mut self) -> Result<()> {
         // Fetch
         info!(
             "Current address is: {:#04x}",
@@ -87,12 +91,12 @@ impl Cpu {
         info!("Instruction retrieved: {:#04x}", &instruction);
 
         // Decode
-        let instruction_info = decode(instruction);
+        let instruction_info = decode(instruction)?;
 
-        info!("Instruction decoded!");
+        info!("Instruction decoded: {}", &instruction_info);
 
         // Execute
-        self.execute(&instruction_info);
+        self.execute(&instruction_info)?;
 
         info!("Instruction executed!");
 
@@ -102,6 +106,8 @@ impl Cpu {
 
         // Slow down for now
         thread::sleep(time::Duration::from_millis(1000));
+
+        Ok(())
     }
 
     pub fn _get_status(&self, status: StatusFlags) -> bool {
