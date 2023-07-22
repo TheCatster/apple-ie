@@ -13,5 +13,9 @@ impl Memory {
         self.ram.get(address as usize).copied()
     }
 
-    pub fn load(&mut self, _address: u16, _buffer: &[u8]) {}
+    pub fn load(&mut self, address: u16, buffer: &[u8]) {
+        for i in 0..buffer.len() {
+            self.ram[address as usize + i] = buffer[i];
+        }
+    }
 }
