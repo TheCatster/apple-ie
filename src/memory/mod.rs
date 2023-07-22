@@ -14,8 +14,8 @@ impl Memory {
     }
 
     pub fn load(&mut self, address: u16, buffer: &[u8]) {
-        for i in 0..buffer.len() {
-            self.ram[address as usize + i] = buffer[i];
+        for (i, byte) in buffer.iter().enumerate() {
+            self.ram[address as usize + i] = *byte;
         }
     }
 }

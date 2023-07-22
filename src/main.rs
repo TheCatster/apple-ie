@@ -1,5 +1,5 @@
 use assembler::assemble;
-use cpu::CPU;
+use cpu::Cpu;
 
 use anyhow::Result;
 use chrono::Local;
@@ -26,7 +26,7 @@ struct Cli {
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-    let mut cpu: CPU = CPU::new();
+    let mut cpu: Cpu = Cpu::new();
 
     Dispatch::new()
         .format(|out, message, record| {

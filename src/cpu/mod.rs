@@ -7,8 +7,8 @@ use std::{thread, time};
 
 mod operations;
 
-pub const CPU_CLOCK_RATE: u32 = 1_000_000; // 1 MHz
-pub const DEFAULT_FLAGS: u8 = 0b0011_0000;
+const _CPU_CLOCK_RATE: u32 = 1_000_000; // 1 MHz
+const _DEFAULT_FLAGS: u8 = 0b0011_0000;
 
 bitflags! {
     pub struct StatusFlags: u8 {
@@ -46,18 +46,16 @@ impl Registers {
     }
 }
 
-pub struct CPU {
+pub struct Cpu {
     registers: Registers,
     memory: Memory,
-    clock: u8,
 }
 
-impl CPU {
+impl Cpu {
     pub fn new() -> Self {
-        CPU {
+        Cpu {
             registers: Registers::new(),
             memory: Memory::new(),
-            clock: 0,
         }
     }
 
@@ -69,9 +67,7 @@ impl CPU {
     }
 
     pub fn load(&mut self, address: u16, buffer: &[u8]) {
-        for i in 0..buffer.len() {
-            self.memory.ram[address as usize + i] = buffer[i]; 
-        }
+        self.memory.load(address, buffer);
         self.registers.program_counter = address;
     }
 
@@ -108,11 +104,11 @@ impl CPU {
         thread::sleep(time::Duration::from_millis(1000));
     }
 
-    pub fn get_status(&self, status: StatusFlags) -> bool {
+    pub fn _get_status(&self, status: StatusFlags) -> bool {
         self.registers.status.bits() & status.bits() != 0
     }
 
-    pub fn set_status(&mut self, status: StatusFlags, value: bool) {
+    pub fn _set_status(&mut self, status: StatusFlags, value: bool) {
         if value {
             self.registers.status |= status;
         } else {
