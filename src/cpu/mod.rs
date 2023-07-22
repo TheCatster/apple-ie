@@ -69,7 +69,9 @@ impl CPU {
     }
 
     pub fn load(&mut self, address: u16, buffer: &[u8]) {
-        self.memory.load(address, buffer);
+        for i in 0..buffer.len() {
+            self.memory.ram[address as usize + i] = buffer[i]; 
+        }
         self.registers.program_counter = address;
     }
 
