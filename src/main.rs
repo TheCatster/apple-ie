@@ -65,7 +65,7 @@ fn main() -> Result<()> {
 
     info!("Program loaded into memory.");
 
-    cpu.run();
+    cpu.run()?;
 
     Ok(())
 }
