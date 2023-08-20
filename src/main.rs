@@ -8,9 +8,12 @@ use fern::{log_file, Dispatch};
 use log::{info, LevelFilter};
 use std::{fs, io};
 
-mod assembler;
-mod cpu;
-mod memory;
+pub mod assembler;
+pub mod cpu;
+pub mod memory;
+
+#[cfg(test)]
+mod tests;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -50,14 +53,11 @@ fn main() -> Result<()> {
         Some(file) => fs::read_to_string(file)?,
         None => String::from(
             "LDA #$c0
-             TAX
-             INX
-             ADC #$c4
              BRK",
         ),
     };
 
-    let bytes = assemble(&program);
+    let bytes = assemble(&program)?;
 
     info!("Program assembled.");
 

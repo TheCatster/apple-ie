@@ -1,17 +1,19 @@
 use crate::memory::Memory;
-use operations::{decode, InstructionInfo};
+use operations::{get_instruction, AddressingMode, InstructionInfo, Opcode};
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use bitflags::bitflags;
 use log::info;
 use std::{thread, time};
 
-mod operations;
+pub mod operations;
 
 const _CPU_CLOCK_RATE: u32 = 1_000_000; // 1 MHz
 const _DEFAULT_FLAGS: u8 = 0b0011_0000;
 
 bitflags! {
+    #[repr(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
     pub struct StatusFlags: u8 {
         const CARRY      = 0b0000_0001;
         const ZERO       = 0b0000_0010;
@@ -62,9 +64,12 @@ impl Cpu {
 
     pub fn run(&mut self) -> Result<()> {
         info!("Beginning main F-D-E loop.");
-        loop {
-            self.fde()?
-        }
+        // At some point, this will be an infinite loop. For now, we are testing.
+        // loop {
+        //     self.fde()?
+        // }
+        self.fde()?;
+        Ok(())
     }
 
     pub fn load(&mut self, address: u16, buffer: &[u8]) {
@@ -73,36 +78,99 @@ impl Cpu {
     }
 
     pub fn execute(&mut self, instruction_info: &InstructionInfo) -> Result<()> {
-        instruction_info.execute()?;
+        match instruction_info.opcode {
+            Opcode::Adc => (),
+            Opcode::And => (),
+            Opcode::Asl => (),
+            Opcode::Bcc => (),
+            Opcode::Bcs => (),
+            Opcode::Beq => (),
+            Opcode::Bit => (),
+            Opcode::Bmi => (),
+            Opcode::Bne => (),
+            Opcode::Bpl => (),
+            Opcode::Brk => (),
+            Opcode::Bvc => (),
+            Opcode::Bvs => (),
+            Opcode::Clc => (),
+            Opcode::Cld => (),
+            Opcode::Cli => (),
+            Opcode::Clv => (),
+            Opcode::Cmp => (),
+            Opcode::Cpx => (),
+            Opcode::Cpy => (),
+            Opcode::Dec => (),
+            Opcode::Dex => (),
+            Opcode::Dey => (),
+            Opcode::Eor => (),
+            Opcode::Inc => (),
+            Opcode::Inx => (),
+            Opcode::Iny => (),
+            Opcode::Jmp => (),
+            Opcode::Jsr => (),
+            Opcode::Ida => (),
+            Opcode::Lda => match instruction_info.addressing_mode {
+                AddressingMode::Immediate => {
+                    self.registers.accumulator = self.fetch_byte()?;
+                    self.registers.status.toggle(StatusFlags::ZERO);
+                    self.registers.status.set(
+                        StatusFlags::NEGATIVE,
+                        (self.registers.status & StatusFlags::NEGATIVE).bits() > 0,
+                    );
+                }
+                _ => (),
+            },
+            Opcode::Ldx => (),
+            Opcode::Ldy => (),
+            Opcode::Lsr => (),
+            Opcode::Nop => (),
+            Opcode::Ora => (),
+            Opcode::Pha => (),
+            Opcode::Php => (),
+            Opcode::Pla => (),
+            Opcode::Plp => (),
+            Opcode::Rol => (),
+            Opcode::Ror => (),
+            Opcode::Rti => (),
+            Opcode::Rts => (),
+            Opcode::Sbc => (),
+            Opcode::Sec => (),
+            Opcode::Sed => (),
+            Opcode::Sei => (),
+            Opcode::Sta => (),
+            Opcode::Stx => (),
+            Opcode::Sty => (),
+            Opcode::Tax => (),
+            Opcode::Tay => (),
+            Opcode::Tsx => (),
+            Opcode::Txa => (),
+            Opcode::Txs => (),
+            Opcode::Tya => (),
+        }
+
+        info!(
+            "Instruction {} executed!",
+            instruction_info.opcode.to_string().to_uppercase()
+        );
+
         Ok(())
     }
 
     pub fn fde(&mut self) -> Result<()> {
         // Fetch
-        info!(
-            "Current address is: {:#04x}",
-            self.registers.program_counter
-        );
-        let instruction = self
-            .memory
-            .read(self.registers.program_counter)
-            .unwrap_or(0xEA);
-
-        info!("Instruction retrieved: {:#04x}", &instruction);
+        let instruction = self.fetch_byte()?;
 
         // Decode
-        let instruction_info = decode(instruction)?;
-
-        info!("Instruction decoded: {}", &instruction_info);
+        let instruction_info = self.decode(instruction)?;
 
         // Execute
+        // For testing, if a BRK, then exit
+        match instruction_info.opcode {
+            Opcode::Brk => return Ok(()),
+            _ => (),
+        }
+
         self.execute(&instruction_info)?;
-
-        info!("Instruction executed!");
-
-        // Increment program counter
-        self.registers.program_counter += instruction_info.size;
-        info!("Program counter incremented!");
 
         // Slow down for now
         thread::sleep(time::Duration::from_millis(1000));
@@ -110,11 +178,38 @@ impl Cpu {
         Ok(())
     }
 
+    fn fetch_byte(&mut self) -> Result<u8> {
+        info!(
+            "Current address is: {:#04x}",
+            self.registers.program_counter
+        );
+
+        let byte = match self.memory.read(self.registers.program_counter) {
+            Some(byte) => byte,
+            None => bail!("Cannot read next value in memory!"),
+        };
+
+        info!("Byte retrieved: {:#04x}", &byte);
+
+        self.registers.program_counter += 1;
+        info!("Program counter incremented!");
+
+        Ok(byte)
+    }
+
+    fn decode(&mut self, instruction: u8) -> Result<InstructionInfo> {
+        let instruction_info = get_instruction(Some(instruction), None, None)?;
+
+        info!("Instruction decoded: {}", &instruction_info);
+
+        Ok(instruction_info)
+    }
+
     pub fn _get_status(&self, status: StatusFlags) -> bool {
         self.registers.status.bits() & status.bits() != 0
     }
 
-    pub fn _set_status(&mut self, status: StatusFlags, value: bool) {
+    pub fn set_status(&mut self, status: StatusFlags, value: bool) {
         if value {
             self.registers.status |= status;
         } else {
