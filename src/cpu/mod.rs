@@ -64,12 +64,9 @@ impl Cpu {
 
     pub fn run(&mut self) -> Result<()> {
         info!("Beginning main F-D-E loop.");
-        // At some point, this will be an infinite loop. For now, we are testing.
-        // loop {
-        //     self.fde()?
-        // }
-        self.fde()?;
-        Ok(())
+        loop {
+            self.fde()?
+        }
     }
 
     pub fn load(&mut self, address: u16, buffer: &[u8]) {
@@ -192,7 +189,10 @@ impl Cpu {
         info!("Byte retrieved: {:#04x}", &byte);
 
         self.registers.program_counter += 1;
-        info!("Program counter incremented!");
+        info!(
+            "Program counter incremented: {:#04x}",
+            self.registers.program_counter
+        );
 
         Ok(byte)
     }

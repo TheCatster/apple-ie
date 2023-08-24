@@ -119,6 +119,7 @@ impl Hash for Opcode {
 #[derive(Debug, Clone, Copy, Eq, PartialOrd, Ord)]
 pub struct InstructionInfo {
     pub opcode: Opcode,
+    pub opcode_value: u8,
     pub size: u16, // 1, 2 or 3 bytes
     pub addressing_mode: AddressingMode,
 }
@@ -150,16 +151,19 @@ impl Hash for InstructionInfo {
 pub static INSTRUCTIONS: [InstructionInfo; 69] = [
     InstructionInfo {
         opcode: Opcode::Brk,
+        opcode_value: 0x00,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Adc,
+        opcode_value: 0x69,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Adc,
+        opcode_value: 0x65,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
@@ -509,7 +513,7 @@ pub fn get_instruction(
             bail!("No code provided! How??")
         };
 
-        let instruction_info = INSTRUCTIONS.iter().find(|o| o.opcode as u8 == code);
+        let instruction_info = INSTRUCTIONS.iter().find(|o| o.opcode_value == code);
 
         if let Some(instruction_info) = instruction_info {
             Ok(*instruction_info)
