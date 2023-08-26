@@ -169,21 +169,25 @@ pub static INSTRUCTIONS: [InstructionInfo; 69] = [
     },
     InstructionInfo {
         opcode: Opcode::And,
+        opcode_value: 0x29,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::And,
+        opcode_value: 0x25,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Asl,
+        opcode_value: 0x0A,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Accumulator,
     },
     InstructionInfo {
         opcode: Opcode::Asl,
+        opcode_value: 0x06,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
