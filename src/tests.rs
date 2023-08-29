@@ -1,4 +1,5 @@
 use super::*;
+use anyhow::Result;
 
 #[test]
 fn create_cpu() {
@@ -6,25 +7,27 @@ fn create_cpu() {
 }
 
 #[test]
-fn assemble_program() {
+fn assemble_program() -> Result<()> {
     let program: &str = "LDA #$c0
              BRK";
 
-    let bytes: Vec<u8> = assemble(&program);
+    let bytes: Vec<u8> = assemble(program)?;
 
     println!("{:?}", bytes);
 
     assert_eq!(bytes, [169, 192, 0]);
+    Ok(())
 }
 
 #[test]
-fn load_cpu() {
+fn load_cpu() -> Result<()> {
     let mut cpu: Cpu = Cpu::new();
 
     let program: &str = "LDA #$c0
              BRK";
 
-    let bytes: Vec<u8> = assemble(&program);
+    let bytes: Vec<u8> = assemble(program)?;
 
     cpu.load(0x800, &bytes);
+    Ok(())
 }

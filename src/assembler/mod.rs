@@ -1,5 +1,5 @@
 use super::cpu::operations::{get_instruction, AddressingMode};
-use anyhow::Result;
+use anyhow::{bail, Result};
 use log::info;
 
 pub fn assemble(program: &str) -> Result<Vec<u8>> {
@@ -32,7 +32,7 @@ fn parse(line: &str) -> Result<(u8, Vec<u8>)> {
             arg if arg.starts_with("#$") => {
                 addressing = AddressingMode::Immediate;
                 let arg = arg.trim_start_matches("#$");
-                args.push(u8::from_str_radix(arg, 16).unwrap());
+                args.push(u8::from_str_radix(arg, 16)?);
             }
             arg if arg.starts_with('$') => {
                 let arg = arg.trim_start_matches('$');
@@ -41,25 +41,23 @@ fn parse(line: &str) -> Result<(u8, Vec<u8>)> {
                 match arg.len() {
                     2 => {
                         addressing = AddressingMode::ZeroPage;
-                        args.push(u8::from_str_radix(arg, 16).unwrap());
+                        args.push(u8::from_str_radix(arg, 16)?);
                     }
                     4 => {
                         addressing = AddressingMode::Absolute;
-                        let arg = u16::from_str_radix(arg, 16).unwrap();
+                        let arg = u16::from_str_radix(arg, 16)?;
                         args.push(arg as u8);
                         args.push((arg >> 8) as u8);
                     }
-                    _ => panic!("Can't parse argument"),
+                    _ => bail!("Can't parse argument"),
                 }
             }
-            _ => panic!("unknown operand"),
+            _ => bail!("Unknown operand."),
         };
     }
 
-    // first it looks only by name, if there are many opcodes with such name,
-    // it looks by name and addressing
-    // todo: change
-    let opcode = get_instruction(None, Some(operation_name), Some(addressing))?;
-
-    Ok((opcode.opcode as u8, args))
+    match get_instruction(None, Some(operation_name), Some(addressing)) {
+        Some(opcode) => Ok((opcode.opcode_value, args)),
+        None => bail!("Instruction cannot be found."),
+    }
 }

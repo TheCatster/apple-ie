@@ -160,12 +160,17 @@ impl Cpu {
         // Decode
         let instruction_info = self.decode(instruction)?;
 
+        self.registers.program_counter += instruction_info.size;
+        info!(
+            "Program counter incremented: {:#04x}",
+            self.registers.program_counter
+        );
+
         // Execute
         // For testing, if a BRK, then exit
-        match instruction_info.opcode {
-            Opcode::Brk => return Ok(()),
-            _ => (),
-        }
+        if instruction_info.opcode == Opcode::Brk {
+            bail!("BRK hit!");
+        };
 
         self.execute(&instruction_info)?;
 
@@ -188,17 +193,14 @@ impl Cpu {
 
         info!("Byte retrieved: {:#04x}", &byte);
 
-        self.registers.program_counter += 1;
-        info!(
-            "Program counter incremented: {:#04x}",
-            self.registers.program_counter
-        );
-
         Ok(byte)
     }
 
     fn decode(&mut self, instruction: u8) -> Result<InstructionInfo> {
-        let instruction_info = get_instruction(Some(instruction), None, None)?;
+        let instruction_info = match get_instruction(Some(instruction), None, None) {
+            Some(x) => x,
+            None => bail!("Instruction was invalid!"),
+        };
 
         info!("Instruction decoded: {}", &instruction_info);
 

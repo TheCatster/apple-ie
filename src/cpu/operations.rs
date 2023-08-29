@@ -193,311 +193,373 @@ pub static INSTRUCTIONS: [InstructionInfo; 69] = [
     },
     InstructionInfo {
         opcode: Opcode::Bcc,
+        opcode_value: 0x90,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Bcs,
+        opcode_value: 0xB0,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Beq,
+        opcode_value: 0xF0,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Bit,
+        opcode_value: 0x24,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Bit,
+        opcode_value: 0x2C,
         size: OPCODE_SIZE_3,
         addressing_mode: AddressingMode::Absolute,
     },
     InstructionInfo {
         opcode: Opcode::Bmi,
+        opcode_value: 0x30,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Bne,
+        opcode_value: 0xD0,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Bpl,
+        opcode_value: 0x10,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Bvc,
+        opcode_value: 0x50,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Bvs,
+        opcode_value: 0x70,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Relative,
     },
     InstructionInfo {
         opcode: Opcode::Clc,
+        opcode_value: 0x18,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Cld,
+        opcode_value: 0xD8,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Cli,
+        opcode_value: 0x58,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Clv,
+        opcode_value: 0xB8,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Cmp,
+        opcode_value: 0xC9,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Cmp,
+        opcode_value: 0xC5,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Cpx,
+        opcode_value: 0xE0,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Cpx,
+        opcode_value: 0xE4,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Cpy,
+        opcode_value: 0xC0,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Cpy,
+        opcode_value: 0xC4,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Dec,
+        opcode_value: 0xC6,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Eor,
+        opcode_value: 0x49,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Eor,
+        opcode_value: 0x45,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Inc,
+        opcode_value: 0xE6,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Jmp,
+        opcode_value: 0x4C,
         size: OPCODE_SIZE_3,
         addressing_mode: AddressingMode::Absolute,
     },
     InstructionInfo {
         opcode: Opcode::Jsr,
+        opcode_value: 0x20,
         size: OPCODE_SIZE_3,
         addressing_mode: AddressingMode::Absolute,
     },
     InstructionInfo {
         opcode: Opcode::Lda,
+        opcode_value: 0xA9,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Lda,
+        opcode_value: 0xA5,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Ldx,
+        opcode_value: 0xA2,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Ldx,
+        opcode_value: 0xA6,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Ldy,
+        opcode_value: 0xA0,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Ldy,
+        opcode_value: 0xA4,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Lsr,
+        opcode_value: 0x4A,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Accumulator,
     },
     InstructionInfo {
         opcode: Opcode::Lsr,
+        opcode_value: 0x46,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Nop,
+        opcode_value: 0xEA,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Ora,
+        opcode_value: 0x09,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Ora,
+        opcode_value: 0x05,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Pha,
+        opcode_value: 0x48,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Php,
+        opcode_value: 0x08,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Pla,
+        opcode_value: 0x68,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Plp,
+        opcode_value: 0x28,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Rol,
+        opcode_value: 0x2A,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Accumulator,
     },
     InstructionInfo {
         opcode: Opcode::Rol,
+        opcode_value: 0x26,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Ror,
+        opcode_value: 0x6A,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Accumulator,
     },
     InstructionInfo {
         opcode: Opcode::Ror,
+        opcode_value: 0x66,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Rti,
+        opcode_value: 0x40,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Rts,
+        opcode_value: 0x60,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Sbc,
+        opcode_value: 0xE9,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::Immediate,
     },
     InstructionInfo {
         opcode: Opcode::Sbc,
+        opcode_value: 0xE5,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Sec,
+        opcode_value: 0x38,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Sed,
+        opcode_value: 0xF8,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Sei,
+        opcode_value: 0x78,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Sta,
+        opcode_value: 0x85,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Stx,
+        opcode_value: 0x86,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Sty,
+        opcode_value: 0x84,
         size: OPCODE_SIZE_2,
         addressing_mode: AddressingMode::ZeroPage,
     },
     InstructionInfo {
         opcode: Opcode::Tax,
+        opcode_value: 0xAA,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Tay,
+        opcode_value: 0xA8,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Tsx,
+        opcode_value: 0xBA,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Txa,
+        opcode_value: 0x8A,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Txs,
+        opcode_value: 0x9A,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Tya,
+        opcode_value: 0x98,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
     InstructionInfo {
         opcode: Opcode::Inx,
+        opcode_value: 0xE8,
         size: OPCODE_SIZE_1,
         addressing_mode: AddressingMode::Implied,
     },
@@ -507,64 +569,35 @@ pub fn get_instruction(
     code: Option<u8>,
     name: Option<&str>,
     addressing: Option<AddressingMode>,
-) -> Result<InstructionInfo> {
-    if code.is_some() {
-        info!("Searching by code.");
-
-        let code = if let Some(code) = code {
-            code
-        } else {
-            bail!("No code provided! How??")
-        };
-
-        let instruction_info = INSTRUCTIONS.iter().find(|o| o.opcode_value == code);
-
-        if let Some(instruction_info) = instruction_info {
-            Ok(*instruction_info)
-        } else {
-            error!("Unknown operation code: 0x{:X}", code);
-            bail!("Unknown operation code!");
+) -> Option<InstructionInfo> {
+    match code {
+        Some(code) => {
+            info!("Searching by code.");
+            let instruction_info = INSTRUCTIONS.iter().find(|o| o.opcode_value == code);
+            return match instruction_info {
+                Some(instruction_info) => Some(*instruction_info),
+                None => {
+                    error!("Unknown operation code: 0x{:X}", code);
+                    None
+                }
+            };
         }
-    } else if addressing.is_none() {
-        info!("Searching by name.");
+        None => (),
+    };
 
-        let name = if let Some(name) = name {
-            name
-        } else {
-            bail!("No name provided!")
-        };
+    let remaining_args: (Option<&str>, Option<AddressingMode>) = (name, addressing);
 
-        let instruction_info_list: Vec<InstructionInfo> = INSTRUCTIONS
-            .into_iter()
-            .filter(|&o| o.opcode.to_string() == name)
-            .collect::<Vec<InstructionInfo>>();
-
-        if let Some(instruction_info) = instruction_info_list.first() {
-            Ok(*instruction_info)
-        } else {
-            bail!("No values in the instruction info list!")
+    match remaining_args {
+        (Some(name), Some(mode)) => {
+            info!("Searching by name and mode.");
+            let name = name.to_uppercase();
+            Some(
+                INSTRUCTIONS
+                    .into_iter()
+                    .find(|o| o.opcode.to_string() == name && o.addressing_mode == mode)
+                    .expect("unknown operation name"),
+            )
         }
-    } else if name.is_some() {
-        info!("Searching by name and mode.");
-
-        let name = if let Some(name) = name {
-            name.to_uppercase()
-        } else {
-            bail!("No name provided!")
-        };
-
-        let mode = if let Some(addressing) = addressing {
-            addressing
-        } else {
-            bail!("No name provided!")
-        };
-
-        Ok(INSTRUCTIONS
-            .into_iter()
-            .find(|o| o.opcode.to_string() == name && o.addressing_mode == mode)
-            .expect("unknown operation name"))
-    } else {
-        error!("Operation does not exist!");
-        bail!("Operation does not exist!");
+        _ => None,
     }
 }
