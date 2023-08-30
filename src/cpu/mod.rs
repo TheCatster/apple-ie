@@ -1,5 +1,5 @@
 use crate::memory::Memory;
-use operations::{get_instruction, AddressingMode, InstructionInfo, Opcode};
+use operations::{get_instruction, AddressingMode, InstructionInfo, OpSize, Opcode};
 
 use anyhow::{bail, Result};
 use bitflags::bitflags;
@@ -75,6 +75,8 @@ impl Cpu {
     }
 
     pub fn execute(&mut self, instruction_info: &InstructionInfo) -> Result<()> {
+        let args = self.get_args(instruction_info.size)?;
+
         match instruction_info.opcode {
             Opcode::Adc => (),
             Opcode::And => (),
@@ -108,7 +110,7 @@ impl Cpu {
             Opcode::Ida => (),
             Opcode::Lda => match instruction_info.addressing_mode {
                 AddressingMode::Immediate => {
-                    self.registers.accumulator = self.fetch_byte()?;
+                    self.registers.accumulator = args[0];
                     self.registers.status.toggle(StatusFlags::ZERO);
                     self.registers.status.set(
                         StatusFlags::NEGATIVE,
@@ -160,29 +162,31 @@ impl Cpu {
         // Decode
         let instruction_info = self.decode(instruction)?;
 
-        self.registers.program_counter += instruction_info.size;
-        info!(
-            "Program counter incremented: {:#04x}",
-            self.registers.program_counter
-        );
-
         // Execute
         // For testing, if a BRK, then exit
         if instruction_info.opcode == Opcode::Brk {
-            bail!("BRK hit!");
+            info!(
+                "CPU Status On Exit - A: {:#04X}, X: {:#04X}, Y: {:#04X}, SP: {:#04X}, PC: {:#04X}",
+                self.registers.accumulator,
+                self.registers.x,
+                self.registers.y,
+                self.registers.stack_pointer,
+                self.registers.program_counter
+            );
+            bail!("Testing finished: BRK hit!");
         };
 
         self.execute(&instruction_info)?;
 
         // Slow down for now
-        thread::sleep(time::Duration::from_millis(1000));
+        thread::sleep(time::Duration::from_millis(100));
 
         Ok(())
     }
 
     fn fetch_byte(&mut self) -> Result<u8> {
         info!(
-            "Current address is: {:#04x}",
+            "Current address is: {:#04X}",
             self.registers.program_counter
         );
 
@@ -191,7 +195,13 @@ impl Cpu {
             None => bail!("Cannot read next value in memory!"),
         };
 
-        info!("Byte retrieved: {:#04x}", &byte);
+        info!("Byte retrieved: {:#04X}", &byte);
+
+        self.registers.program_counter += 1;
+        info!(
+            "Program counter incremented: {:#04X}",
+            self.registers.program_counter
+        );
 
         Ok(byte)
     }
@@ -216,6 +226,21 @@ impl Cpu {
             self.registers.status |= status;
         } else {
             self.registers.status &= !status;
+        }
+    }
+
+    pub fn get_args(&mut self, size: OpSize) -> Result<Vec<u8>> {
+        match size {
+            OpSize::Two => {
+                let arg = self.fetch_byte()?;
+                Ok(vec![arg])
+            }
+            OpSize::Three => {
+                let arg_one = self.fetch_byte()?;
+                let arg_two = self.fetch_byte()?;
+                Ok(vec![arg_one, arg_two])
+            }
+            _ => Ok(vec![]),
         }
     }
 }
