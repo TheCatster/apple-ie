@@ -15,7 +15,7 @@ pub fn assemble(program: &str) -> Result<Vec<u8>> {
         }
     }
 
-    info!("The following is in bytes: {:?}", bytes);
+    info!("The following is in bytes: {:#04X?}", bytes);
 
     Ok(bytes)
 }
