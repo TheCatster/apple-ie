@@ -69,9 +69,20 @@ impl Cpu {
         }
     }
 
+    pub fn read_addr(&self, address: u16) -> Result<u8> {
+        match self.memory.read(address) {
+            Some(value) => Ok(value),
+            None => bail!("No such address!"),
+        }
+    }
+
     pub fn load(&mut self, address: u16, buffer: &[u8]) {
         self.memory.load(address, buffer);
         self.registers.program_counter = address;
+    }
+
+    pub fn load_addr(&mut self, address: u16, value: u8) {
+        self.memory.load(address, &[value]);
     }
 
     pub fn execute(&mut self, instruction_info: &InstructionInfo) -> Result<()> {
@@ -112,7 +123,7 @@ impl Cpu {
                 AddressingMode::Immediate => {
                     self.registers.accumulator = args[0];
                     self.registers.status.toggle(StatusFlags::ZERO);
-                    self.registers.status.set(
+                    self.set_status(
                         StatusFlags::NEGATIVE,
                         (self.registers.status & StatusFlags::NEGATIVE).bits() > 0,
                     );
@@ -136,7 +147,15 @@ impl Cpu {
             Opcode::Sec => (),
             Opcode::Sed => (),
             Opcode::Sei => (),
-            Opcode::Sta => (),
+            Opcode::Sta => {
+                match instruction_info.addressing_mode {
+                    AddressingMode::Absolute => {
+                        let addr = u16::from(args[1]) << 8 | u16::from(args[0]);
+                        self.load_addr(addr, self.registers.accumulator)
+                    }
+                    _ => (),
+                }
+            }
             Opcode::Stx => (),
             Opcode::Sty => (),
             Opcode::Tax => (),
@@ -173,6 +192,7 @@ impl Cpu {
                 self.registers.stack_pointer,
                 self.registers.program_counter
             );
+            info!("Current memory: {:#04X}", self.read_addr(0x2000)?);
             bail!("Testing finished: BRK hit!");
         };
 

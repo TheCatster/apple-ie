@@ -52,7 +52,7 @@ fn main() -> Result<()> {
     let program = match &cli.file {
         Some(file) => fs::read_to_string(file)?,
         None => String::from(
-            "LDA #$c0
+            "LDA #$01
              BRK",
         ),
     };
